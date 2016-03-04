@@ -1,0 +1,27 @@
+This doesn't work as designed because symbols are exported with a .def file
+which does not use the stdcall decorations
+
+--- origsrc/include/config-win.h	2015-12-08 01:50:35.000000000 -0600
++++ src/include/config-win.h	2016-03-04 14:25:04.474849600 -0600
+@@ -118,7 +118,6 @@ typedef uint rf_SetTimer;
+ #define bool_defined
+ #define byte_defined
+ #define HUGE_PTR
+-#define STDCALL __stdcall           /* Used by libmariadb.dll */
+ 
+ #define VOID_SIGHANDLER
+ #define SIZEOF_CHAR		1
+--- origsrc/include/mysql.h	2015-12-08 01:50:35.000000000 -0600
++++ src/include/mysql.h	2016-03-04 14:24:56.226802200 -0600
+@@ -33,11 +33,7 @@ extern "C" {
+ #include <sys/types.h>
+ typedef char my_bool;
+ 
+-#if !defined(_WIN32)
+ #define STDCALL
+-#else
+-#define STDCALL __stdcall
+-#endif
+ typedef char * gptr;
+ 
+ 

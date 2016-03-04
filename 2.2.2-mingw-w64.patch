@@ -1,0 +1,11 @@
+--- origsrc/include/config-win.h	2016-03-04 14:45:16.111707900 -0600
++++ src/include/config-win.h	2016-03-04 14:47:43.257393000 -0600
+@@ -56,8 +56,6 @@
+ #define F_TO_EOF        (INT_MAX32/2)   /* size for lock of all file */
+ #define F_OK		0		/* parameter to access() */
+ 
+-#define S_IROTH		S_IREAD		/* for my_lib */
+-
+ #ifdef __BORLANDC__
+ #define FILE_BINARY	O_BINARY	/* my_fopen in binary mode */
+ #define O_TEMPORARY	0

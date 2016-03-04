@@ -1,0 +1,55 @@
+CROSS_HOST="x86_64-w64-mingw32"
+inherit cross cmake
+
+NAME="mingw64-x86_64-mariadb-connector-c"
+VERSION=2.2.2
+RELEASE=1
+CATEGORY="Devel"
+SUMMARY="MySQL client library for Win64 toolchain"
+DESCRIPTION="MariaDB Connector/C is used to connect applications developed in
+C or C++ to MariaDB and MySQL databases. MariaDB Connector/C has exactly the
+same API as the MySQL Connector/C for MySQL 5.5."
+HOMEPAGE="https://mariadb.com/kb/en/mariadb/mariadb-connector-c/"
+SRC_URI="https://downloads.mariadb.org/f/connector-c-${VERSION}/mariadb-connector-c-${VERSION}-src.tar.gz?serve"
+SRC_URI+=" mysql_config"
+SRC_DIR=.
+PATCH_URI="
+	2.2.2-stdcall.patch
+	2.2.2-system-iconv.patch
+	2.2.2-mingw-w64.patch
+"
+
+DIFF_EXCLUDES="my_config.h mysql_version.h"
+
+CYGCMAKE_ARGS="
+	-DPLUGIN_INSTALL_DIR=lib/mariadb/plugin
+	-DWITH_EXTERNAL_ICONV=ON
+	-DWITH_EXTERNAL_ZLIB=ON
+	-DWITH_OPENSSL=ON
+"
+
+src_install() {
+	cd ${B}
+	cyginstall
+
+	pushd ${D}${CROSS_INCLUDEDIR}/mariadb
+	rm -f CMakeLists.txt Makefile.am *.h.in
+	popd
+
+	dodir ${CROSS_BINDIR}
+	pushd ${D}${CROSS_LIBDIR}
+	# plugins should not install import libraries
+	rm -f mariadb/plugin/*.a
+	# no straight-forward way to override this subdir
+	mv mariadb/libmariadb.dll ${D}${CROSS_BINDIR}/
+	mv mariadb/liblibmariadb.dll.a .
+	rm mariadb/libmariadbclient.a
+	# compatibility symlinks for mysql
+	ln -s liblibmariadb.dll.a liblibmysql.dll.a
+	ln -s liblibmariadb.dll.a libmysqlclient.dll.a
+	ln -s liblibmariadb.dll.a libmysqlclient_r.dll.a
+	popd
+
+	dosym mariadb ${CROSS_INCLUDEDIR}/mysql
+	dobin ${S}/mysql_config
+}
