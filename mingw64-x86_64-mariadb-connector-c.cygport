@@ -2,7 +2,7 @@ CROSS_HOST="x86_64-w64-mingw32"
 inherit cross cmake
 
 NAME="mingw64-x86_64-mariadb-connector-c"
-VERSION=2.2.2
+VERSION=2.3.1
 RELEASE=1
 CATEGORY="Devel"
 SUMMARY="MySQL client library for Win64 toolchain"
@@ -12,7 +12,7 @@ same API as the MySQL Connector/C for MySQL 5.5."
 HOMEPAGE="https://mariadb.com/kb/en/mariadb/mariadb-connector-c/"
 SRC_URI="https://downloads.mariadb.org/f/connector-c-${VERSION}/mariadb-connector-c-${VERSION}-src.tar.gz?serve"
 SRC_URI+=" mysql_config"
-SRC_DIR=.
+SRC_DIR="mariadb-connector-c-${VERSION}-src"
 PATCH_URI="
 	2.2.2-stdcall.patch
 	2.2.2-system-iconv.patch
